@@ -22,7 +22,7 @@ paths = []
 from tkinter import messagebox
 import random
 from tkinter import ttk
-from collection import deque
+from collections import deque
 class MazeGUI:
     def __init__(self, root, maze, path):
         self.root = root
@@ -193,13 +193,13 @@ def shownew_mazes():
         lbl = tk.Label(frame, text=f'Maze {i + 1}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=0, padx=40, pady=5)
         
-        lbl = tk.Label(frame, text=f'BFS', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(frame, text=f'{paths[i][1][1]}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=1, padx=40, pady=5)
-        BFS_btn = tk.Button(frame, text='BFS', command=show_path)
+        BFS_btn = tk.Button(frame, text='BFS', command=lambda: show_path_new(mazes[i], paths[i][1][0]))
         BFS_btn.grid(row=i, column=2, padx=40, pady=5)
+
         lbl = tk.Label(frame, text=f'DFS', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=3, padx=40, pady=5)
-        
         DFS_btn = tk.Button(frame, text='DFS', command=show_path)
         DFS_btn.grid(row=i, column=4, padx=40, pady=5)
         
@@ -255,6 +255,8 @@ def generate_mazes(maze_ent, row_ent, col_ent):
             #do something
             maze_paths = []
             path = a_star(maze, start, goal)
+            maze_paths.append(path)
+            path = bfs(maze, start, goal)
             maze_paths.append(path)
             paths.append(maze_paths)
 
