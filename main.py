@@ -24,7 +24,9 @@ from tkinter import messagebox
 import random
 from tkinter import ttk
 from collections import deque
+from flood_fill import *
 from prettytable import PrettyTable
+
 class MazeGUI:
     def __init__(self, root, maze, path):
         self.root = root
@@ -259,9 +261,9 @@ def shownew_mazes():
         A_btn = tk.Button(frame, text='A*', command=lambda i=i: show_path_new(i, 0))
         A_btn.grid(row=i, column=6, padx=40, pady=5)
         
-        lbl = tk.Label(frame, text='Flood Fill', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(frame, text=f'{paths[i][3][1]}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=7, padx=40, pady=5)
-        FF_btn = tk.Button(frame, text='Flood Fill', command=show_path)
+        FF_btn = tk.Button(frame, text='Flood Fill', command=lambda i=i: show_path_new(i, 3))
         FF_btn.grid(row=i, column=8, padx=40, pady=5)
 def show_mazes():
     global mazes
@@ -321,20 +323,27 @@ def generate_mazes(maze_ent, row_ent, col_ent):
             path = dfs(maze, start, goal)
             maze_paths.append(path)
 
+            print(maze, start, goal)
+            path = flood_fill(maze, start, goal)
+            maze_paths.append(path)
+
             paths.append(maze_paths)
         a_sum = 0
         b_sum = 0
         d_sum = 0
+        c_sum = 0
         count = 0
         for i in range(len(paths)):
             if paths[i][0][0]:
                 a_sum += paths[i][0][1]
                 b_sum += paths[i][1][1]
                 d_sum += paths[i][2][1]
+                c_sum += paths[i][3][1]
                 count += 1
         a_sum = a_sum / count
         b_sum = b_sum / count
         d_sum = d_sum / count
+        c_sum = d_sum / count
 #        print('A* avg - ', a_sum)
  #       print('BFS avg - ', b_sum)
   #      print('DFS avg - ', d_sum)
@@ -346,6 +355,7 @@ def generate_mazes(maze_ent, row_ent, col_ent):
         table.add_row(["A*", f"{a_sum:.6f} seconds"])
         table.add_row(["BFS", f"{b_sum:.6f} seconds"])
         table.add_row(["DFS", f"{d_sum:.6f} seconds"])
+        table.add_row(["Flood Fill", f"{c_sum:.6f} seconds"])
         print(table)
         shownew_mazes()
     except ValueError:
