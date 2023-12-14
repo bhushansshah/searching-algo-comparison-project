@@ -24,6 +24,7 @@ import random
 from tkinter import ttk
 from collections import deque
 from flood_fill import *
+from prettytable import PrettyTable
 
 class MazeGUI:
     def __init__(self, root, maze, path):
@@ -319,9 +320,28 @@ def generate_mazes(maze_ent, row_ent, col_ent):
         a_sum = 0
         b_sum = 0
         d_sum = 0
-
-        print(len(mazes))
-        print(mazes[:1])
+        count = 0
+        for i in range(len(paths)):
+            if paths[i][0][0]:
+                a_sum += paths[i][0][1]
+                b_sum += paths[i][1][1]
+                d_sum += paths[i][2][1]
+                count += 1
+        a_sum = a_sum / count
+        b_sum = b_sum / count
+        d_sum = d_sum / count
+#        print('A* avg - ', a_sum)
+ #       print('BFS avg - ', b_sum)
+  #      print('DFS avg - ', d_sum)
+   #     print(len(mazes))
+    #    print(mazes[:1])
+        print(count)
+        table = PrettyTable()
+        table.field_names = ["Algorithm", "Avg Time"]
+        table.add_row(["A*", f"{a_sum:.6f} seconds"])
+        table.add_row(["BFS", f"{b_sum:.6f} seconds"])
+        table.add_row(["DFS", f"{d_sum:.6f} seconds"])
+        print(table)
         shownew_mazes()
     except ValueError:
         messagebox.showerror('Error', 'You have entered invalid input! Please try again.')
