@@ -104,6 +104,24 @@ def get_neighbors(maze, node):
 
     return neighbors
 
+def dfs(maze, start, goal, path = []):
+    
+    if(start == goal):
+        return path + [goal]
+    
+    i, j = start
+    if(0 <= i < len(maze) and 0 <= j < len(maze[0]) and maze[i][j] == 0):
+        maze[i][j] = 2
+        for direction in [(0, 1), (-1, 0), (0, -1), (1, 0)]:
+            next_i, next_j = i + direction[0], j + direction[1]
+            next_pos = (next_i, next_j)
+            if(0 <= next_i < len(maze) and 0 <= next_j < len(maze[0]) and maze[next_i][next_j] == 0):
+                new_path = dfs(maze, next_pos, goal, path + [start])
+                if new_path:
+                    return new_path
+
+    return None
+
 def bfs(maze, start, goal):
     start_time = time.time()
     queue = deque([start])
@@ -198,9 +216,9 @@ def shownew_mazes():
         BFS_btn = tk.Button(frame, text='BFS', command=lambda: show_path_new(mazes[i], paths[i][1][0]))
         BFS_btn.grid(row=i, column=2, padx=40, pady=5)
 
-        lbl = tk.Label(frame, text=f'DFS', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(frame, text=f'{paths[i][2][1]}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=3, padx=40, pady=5)
-        DFS_btn = tk.Button(frame, text='DFS', command=show_path)
+        DFS_btn = tk.Button(frame, text='DFS', command=lambda: show_path_new(mazes[i], paths[i][2][0]))
         DFS_btn.grid(row=i, column=4, padx=40, pady=5)
         
         lbl = tk.Label(frame, text=f'{paths[i][0][1]}', width=15, font=('TkDefaultFont', 12))
@@ -258,6 +276,14 @@ def generate_mazes(maze_ent, row_ent, col_ent):
             maze_paths.append(path)
             path = bfs(maze, start, goal)
             maze_paths.append(path)
+            start_time = time.time()
+            path = dfs(maze, start, goal, [])
+            duration = time.time() - start_time
+            if path:
+                maze_paths.append([path, duration])
+            else:
+                maze_paths.append([None, None])
+
             paths.append(maze_paths)
 
         print(len(mazes))
