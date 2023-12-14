@@ -34,6 +34,8 @@ def get_path(maze, start_point, end_point):
         return None
 
     path = [] 
+    start_point1 = (255, 255)
+    updated_index = (255, 255)
     while(start_point != end_point):
         start_point1 = start_point
         path.append(start_point)
@@ -47,6 +49,8 @@ def get_path(maze, start_point, end_point):
                     mini = mininum
                 maze[updated_i][updated_j] = -1
         # print(path)
+        if(start_point1 == updated_index):
+            return None
         start_point = updated_index
     
     path.append(start_point)
