@@ -167,10 +167,13 @@ def show_path():
 def on_mousewheel(event):
     canvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
-def show_path_new(maze, path):
+def show_path_new(maze_ind, path_ind):
+    global mazes
+    global paths
+    print(maze_ind, path_ind)
     new_window = tk.Tk()
     new_window.title('A* Path')
-    gui = MazeGUI(new_window, maze, path)
+    gui = MazeGUI(new_window, mazes[maze_ind], paths[maze_ind][path_ind][0])
     new_window.mainloop()
 
 def shownew_mazes():
@@ -190,27 +193,27 @@ def shownew_mazes():
     canvas.create_window((0, 0), window=frame, anchor="nw")
 
     for i in range(no_of_mazes):
-        lbl = tk.Label(frame, text=f'Maze {i + 1}', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(canvas, text=f'Maze {i + 1}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=0, padx=40, pady=5)
         
-        lbl = tk.Label(frame, text=f'{paths[i][1][1]}', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(canvas, text=f'{paths[i][1][1]}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=1, padx=40, pady=5)
-        BFS_btn = tk.Button(frame, text='BFS', command=lambda: show_path_new(mazes[i], paths[i][1][0]))
+        BFS_btn = tk.Button(canvas, text='BFS', command=lambda i=i : show_path_new(i, 1))
         BFS_btn.grid(row=i, column=2, padx=40, pady=5)
 
-        lbl = tk.Label(frame, text=f'DFS', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(canvas, text=f'DFS', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=3, padx=40, pady=5)
-        DFS_btn = tk.Button(frame, text='DFS', command=show_path)
+        DFS_btn = tk.Button(canvas, text='DFS', command=show_path)
         DFS_btn.grid(row=i, column=4, padx=40, pady=5)
         
-        lbl = tk.Label(frame, text=f'{paths[i][0][1]}', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(canvas, text=f'{paths[i][0][1]}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=5, padx=40, pady=5)
-        A_btn = tk.Button(frame, text='A*', command=lambda: show_path_new(mazes[i], paths[i][0][0]))
+        A_btn = tk.Button(canvas, text='A*', command=lambda i=i: show_path_new(i, 0))
         A_btn.grid(row=i, column=6, padx=40, pady=5)
         
-        lbl = tk.Label(frame, text='Flood Fill', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(canvas, text='Flood Fill', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=7, padx=40, pady=5)
-        FF_btn = tk.Button(frame, text='Flood Fill', command=show_path)
+        FF_btn = tk.Button(canvas, text='Flood Fill', command=show_path)
         FF_btn.grid(row=i, column=8, padx=40, pady=5)
 def show_mazes():
     global mazes
