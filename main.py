@@ -89,7 +89,8 @@ def generate_maze(rows, cols, obstacle_probability):
         for j in range(cols):
             if random.random() < obstacle_probability:
                 maze[i][j] = 1
-
+    maze[0][0] = 0;
+    maze[rows-1][cols-1] = 0;
     return maze
 def heuristic(a, b):
         # Manhattan distance as the heuristic function
@@ -106,25 +107,25 @@ def get_neighbors(maze, node):
             neighbors.append(new_node)
 
     return neighbors
-'''
-def dfs(maze, start, goal, path = []):
+# '''
+# def dfs(maze, start, goal, path = []):
     
-    if(start == goal):
-        return path + [goal]
+#     if(start == goal):
+#         return path + [goal]
     
-    i, j = start
-    if(0 <= i < len(maze) and 0 <= j < len(maze[0]) and maze[i][j] == 0):
-        maze[i][j] = 2
-        for direction in [(0, 1), (-1, 0), (0, -1), (1, 0)]:
-            next_i, next_j = i + direction[0], j + direction[1]
-            next_pos = (next_i, next_j)
-            if(0 <= next_i < len(maze) and 0 <= next_j < len(maze[0]) and maze[next_i][next_j] == 0):
-                new_path = dfs(maze, next_pos, goal, path + [start])
-                if new_path:
-                    return new_path
+#     i, j = start
+#     if(0 <= i < len(maze) and 0 <= j < len(maze[0]) and maze[i][j] == 0):
+#         maze[i][j] = 2
+#         for direction in [(0, 1), (-1, 0), (0, -1), (1, 0)]:
+#             next_i, next_j = i + direction[0], j + direction[1]
+#             next_pos = (next_i, next_j)
+#             if(0 <= next_i < len(maze) and 0 <= next_j < len(maze[0]) and maze[next_i][next_j] == 0):
+#                 new_path = dfs(maze, next_pos, goal, path + [start])
+#                 if new_path:
+#                     return new_path
 
-    return None
-'''
+#     return None
+# '''
 def dfs(maze, start, goal):
     start_time = time.time()
     stack = [start]
@@ -135,7 +136,7 @@ def dfs(maze, start, goal):
         
         if current_node == goal:
             path = reconstruct_path(came_from, start, goal)
-            return [path, time.time() - start_time]
+            return [path, round(time.time() - start_time, 7)]
         
         for neighbor in get_neighbors(maze, current_node):
             if neighbor not in came_from:
@@ -143,6 +144,7 @@ def dfs(maze, start, goal):
                 came_from[neighbor] = current_node
     
     return [None, None]  # No path found
+
 def bfs(maze, start, goal):
     start_time = time.time()
     queue = deque([start])
@@ -155,7 +157,7 @@ def bfs(maze, start, goal):
 
         if current_node == goal:
             path = reconstruct_path(came_from, start, goal)
-            return [path, time.time() - start_time]
+            return [path, round(time.time() - start_time, 7)]
 
         for neighbor in get_neighbors(maze, current_node):
             if neighbor not in came_from:
@@ -177,7 +179,7 @@ def a_star(maze, start, goal):
 
         if current_node == goal:
             path = reconstruct_path(came_from, start, goal)
-            return [path, time.time() - start_time]
+            return [path, round(time.time() - start_time, 7)]
 
         for neighbor in get_neighbors(maze, current_node):
             new_cost = cost_so_far[current_node] + 1
@@ -312,7 +314,6 @@ def generate_mazes(maze_ent, row_ent, col_ent):
             path = dfs(maze, start, goal)
             maze_paths.append(path)
 
-            print(maze, start, goal)
             path = flood_fill(maze, start, goal)
             maze_paths.append(path)
 

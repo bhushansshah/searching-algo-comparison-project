@@ -72,7 +72,6 @@ def copy_matrix(maze):
 
 
 def flood_fill(maze, start, end):
-    print("Original maze")
     maze1 = copy_matrix(maze)
     value = 1
     get_req_matrix(maze1, 1)
@@ -80,13 +79,11 @@ def flood_fill(maze, start, end):
     flood(maze1, value, end)
     path = get_path(maze1, start, end)
     end_time = time.time()
-    print("Path: ")
-    print(path)
     get_req_matrix(maze1, -1)
-    print("--------------------------------------------------------------------------")
-    print(maze)
-    print("--------------------------------------------------------------------------")
-    return [path, end_time-start_time]
+    if(path):
+        return [path, round(time.time() - start_time, 7)]
+    else:
+        return [None, None]
 
 
 '''maze = [                        
