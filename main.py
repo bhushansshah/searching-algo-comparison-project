@@ -23,6 +23,8 @@ from tkinter import messagebox
 import random
 from tkinter import ttk
 from collections import deque
+from flood_fill import *
+
 class MazeGUI:
     def __init__(self, root, maze, path):
         self.root = root
@@ -247,9 +249,9 @@ def shownew_mazes():
         A_btn = tk.Button(frame, text='A*', command=lambda i=i: show_path_new(i, 0))
         A_btn.grid(row=i, column=6, padx=40, pady=5)
         
-        lbl = tk.Label(frame, text='Flood Fill', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(frame, text=f'{paths[i][3][1]}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=7, padx=40, pady=5)
-        FF_btn = tk.Button(frame, text='Flood Fill', command=show_path)
+        FF_btn = tk.Button(frame, text='Flood Fill', command=lambda i=i: show_path_new(i, 3))
         FF_btn.grid(row=i, column=8, padx=40, pady=5)
 def show_mazes():
     global mazes
@@ -307,6 +309,10 @@ def generate_mazes(maze_ent, row_ent, col_ent):
                 maze_paths.append([None, None])
             '''
             path = dfs(maze, start, goal)
+            maze_paths.append(path)
+
+            print(maze, start, goal)
+            path = flood_fill(maze, start, goal)
             maze_paths.append(path)
 
             paths.append(maze_paths)
