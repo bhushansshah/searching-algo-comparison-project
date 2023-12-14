@@ -23,6 +23,7 @@ from tkinter import messagebox
 import random
 from tkinter import ttk
 from collections import deque
+from prettytable import PrettyTable
 class MazeGUI:
     def __init__(self, root, maze, path):
         self.root = root
@@ -323,11 +324,18 @@ def generate_mazes(maze_ent, row_ent, col_ent):
         a_sum = a_sum / count
         b_sum = b_sum / count
         d_sum = d_sum / count
-        print('A* avg - ', a_sum)
-        print('BFS avg - ', b_sum)
-        print('DFS avg - ', d_sum)
-        print(len(mazes))
-        print(mazes[:1])
+#        print('A* avg - ', a_sum)
+ #       print('BFS avg - ', b_sum)
+  #      print('DFS avg - ', d_sum)
+   #     print(len(mazes))
+    #    print(mazes[:1])
+        print(count)
+        table = PrettyTable()
+        table.field_names = ["Algorithm", "Avg Time"]
+        table.add_row(["A*", f"{a_sum:.6f} seconds"])
+        table.add_row(["BFS", f"{b_sum:.6f} seconds"])
+        table.add_row(["DFS", f"{d_sum:.6f} seconds"])
+        print(table)
         shownew_mazes()
     except ValueError:
         messagebox.showerror('Error', 'You have entered invalid input! Please try again.')
