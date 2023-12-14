@@ -103,7 +103,7 @@ def get_neighbors(maze, node):
             neighbors.append(new_node)
 
     return neighbors
-
+'''
 def dfs(maze, start, goal, path = []):
     
     if(start == goal):
@@ -121,7 +121,25 @@ def dfs(maze, start, goal, path = []):
                     return new_path
 
     return None
-
+'''
+def dfs(maze, start, goal):
+    start_time = time.time()
+    stack = [start]
+    came_from = {start: None}
+    
+    while stack:
+        current_node = stack.pop()
+        
+        if current_node == goal:
+            path = reconstruct_path(came_from, start, goal)
+            return [path, time.time() - start_time]
+        
+        for neighbor in get_neighbors(maze, current_node):
+            if neighbor not in came_from:
+                stack.append(neighbor)
+                came_from[neighbor] = current_node
+    
+    return [None, None]  # No path found
 def bfs(maze, start, goal):
     start_time = time.time()
     queue = deque([start])
@@ -211,27 +229,27 @@ def shownew_mazes():
     canvas.create_window((0, 0), window=frame, anchor="nw")
 
     for i in range(no_of_mazes):
-        lbl = tk.Label(canvas, text=f'Maze {i + 1}', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(frame, text=f'Maze {i + 1}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=0, padx=40, pady=5)
         
-        lbl = tk.Label(canvas, text=f'{paths[i][1][1]}', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(frame, text=f'{paths[i][1][1]}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=1, padx=40, pady=5)
-        BFS_btn = tk.Button(canvas, text='BFS', command=lambda i=i : show_path_new(i, 1))
+        BFS_btn = tk.Button(frame, text='BFS', command=lambda i=i : show_path_new(i, 1))
         BFS_btn.grid(row=i, column=2, padx=40, pady=5)
 
-        lbl = tk.Label(canvas, text=f'{paths[i][2][1]}', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(frame, text=f'{paths[i][2][1]}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=3, padx=40, pady=5)
-        DFS_btn = tk.Button(canvas, text='DFS', command=lambda i=i: show_path_new(i, 2))
+        DFS_btn = tk.Button(frame, text='DFS', command=lambda i=i: show_path_new(i, 2))
         DFS_btn.grid(row=i, column=4, padx=40, pady=5)
         
-        lbl = tk.Label(canvas, text=f'{paths[i][0][1]}', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(frame, text=f'{paths[i][0][1]}', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=5, padx=40, pady=5)
-        A_btn = tk.Button(canvas, text='A*', command=lambda i=i: show_path_new(i, 0))
+        A_btn = tk.Button(frame, text='A*', command=lambda i=i: show_path_new(i, 0))
         A_btn.grid(row=i, column=6, padx=40, pady=5)
         
-        lbl = tk.Label(canvas, text='Flood Fill', width=15, font=('TkDefaultFont', 12))
+        lbl = tk.Label(frame, text='Flood Fill', width=15, font=('TkDefaultFont', 12))
         lbl.grid(row=i, column=7, padx=40, pady=5)
-        FF_btn = tk.Button(canvas, text='Flood Fill', command=show_path)
+        FF_btn = tk.Button(frame, text='Flood Fill', command=show_path)
         FF_btn.grid(row=i, column=8, padx=40, pady=5)
 def show_mazes():
     global mazes
@@ -279,6 +297,7 @@ def generate_mazes(maze_ent, row_ent, col_ent):
             maze_paths.append(path)
             path = bfs(maze, start, goal)
             maze_paths.append(path)
+            '''         
             start_time = time.time()
             path = dfs(maze, start, goal, [])
             duration = time.time() - start_time
@@ -286,6 +305,9 @@ def generate_mazes(maze_ent, row_ent, col_ent):
                 maze_paths.append([path, duration])
             else:
                 maze_paths.append([None, None])
+            '''
+            path = dfs(maze, start, goal)
+            maze_paths.append(path)
 
             paths.append(maze_paths)
         a_sum = 0
