@@ -16,6 +16,7 @@ root.mainloop()
 
 import tkinter as tk
 import heapq
+import math
 import time
 mazes = None
 paths = [] 
@@ -87,9 +88,10 @@ def generate_maze(rows, cols, obstacle_probability):
         for j in range(cols):
             if random.random() < obstacle_probability:
                 maze[i][j] = 1
-
+    maze[0][0] = 0
+    maze[len(rows) - 1][len(cols) - 1] = 0
     return maze
-def heuristic(a, b):
+def heuris(a, b):
         # Manhattan distance as the heuristic function
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
@@ -162,6 +164,15 @@ def bfs(maze, start, goal):
 
     return [None, None]  # No path found
 
+def heuristic(start, curr, target):
+    if curr == start or curr == target:
+        return 0
+    a = math.sqrt((start[0] - curr[0]) ** 2 + (start[1] - curr[1]) ** 2)
+    b = math.sqrt((target[0] - curr[0]) ** 2 + (target[1] - curr[1]) ** 2)
+    dot = (curr[0] - start[0]) * (target[0] - curr[0]) + (curr[1] - start[1]) * (target[1] - curr[1])
+
+    angle = math.acos(dot / (a * b))
+    return angle
 def a_star(maze, start, goal):
     start_time = time.time()
     frontier = [(0, start)]
@@ -181,7 +192,7 @@ def a_star(maze, start, goal):
             new_cost = cost_so_far[current_node] + 1
             if neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]:
                 cost_so_far[neighbor] = new_cost
-                priority = new_cost + heuristic(goal, neighbor)
+                priority = new_cost + heuristic(current_node, neighbor, goal)
                 heapq.heappush(frontier, (priority, neighbor))
                 came_from[neighbor] = current_node
 
